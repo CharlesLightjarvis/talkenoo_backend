@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\Example;
 use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MessageController extends Controller
 {
@@ -13,23 +14,14 @@ class MessageController extends Controller
      */
     public function sendMessage(Request $request)
     {
-        $request->validate([
-            'content' => 'required|string',
-            'sender_id' => 'required|integer',
-            'receiver_id' => 'required|integer',
-        ]);
-
-        $message = Message::create([
-            'content' => $request->input('content'),
-            'sender_id' => $request->input('sender_id'),
-            'receiver_id' => $request->input('receiver_id'),
-        ]);
-
-        // Diffuser l'événement en temps réel
-        broadcast(new Example($message))->toOthers();
-
-        return response()->json(['status' => 'Message sent!', 'message' => $message], 200);
+        $messageContent = $request->input('content');
+        broadcast(new Example($messageContent))->toOthers();
+        Log::info("Message envoyé via WebSocket: " . $messageContent); // Log pour debug
+        return response()->json(['status' => 'Message sent!', 'message' => $messageContent], 200);
     }
+
+
+
 
     /**
      * Récupère tous les messages.
