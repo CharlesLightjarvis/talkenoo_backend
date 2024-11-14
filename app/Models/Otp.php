@@ -10,4 +10,6 @@ class Otp extends Model
     use HasFactory;
 
     protected $fillable = ['user_id', 'otp_code', 'expires_at'];
+
+    public $timestamps = true;
 }
