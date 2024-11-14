@@ -6,12 +6,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +23,7 @@ class User extends Authenticatable
         'fullName',
         'email',
         'password',
-        'phoneNumber',
+        'phone',
     ];
 
     /**
@@ -46,21 +47,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    /**
-     * Relation avec les messages envoyés par l'utilisateur.
-     */
-    public function sentMessages()
-    {
-        return $this->hasMany(Message::class, 'sender_id');
-    }
-
-    /**
-     * Relation avec les messages reçus par l'utilisateur.
-     */
-    public function receivedMessages()
-    {
-        return $this->hasMany(Message::class, 'receiver_id');
     }
 }

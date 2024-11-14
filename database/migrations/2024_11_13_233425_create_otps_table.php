@@ -12,11 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('otps', function (Blueprint $table) {
             $table->id();
-            $table->text('content');
-            $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('receiver_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->string('otp_code');
+            $table->foreignIdFor(User::class)
+                ->constrained('users')
+                ->onDelete('cascade');
+            $table->timestamp('expires_at');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('otps');
     }
 };
