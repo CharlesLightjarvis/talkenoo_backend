@@ -38,7 +38,7 @@ class AuthController extends Controller
         ]);
 
         // Envoyer l'OTP par e-mail en utilisant le mailable
-        Mail::to($user->email)->send(new sendOtpMail($otpCode));
+        // Mail::to($user->email)->send(new sendOtpMail($otpCode));
 
         // Réponse JSON pour indiquer le succès de l'envoi
         return response()->json([
@@ -49,21 +49,20 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Vérifiez si l'utilisateur est authentifié
-        if (Auth::check()) {
-            // Déconnectez l'utilisateur
-            Auth::logout();
-
-            // Révoquez les tokens de l'utilisateur si vous utilisez une API avec des jetons (optionnel)
+        // Vérifie si l'utilisateur est authentifié
+        if ($request->user()) {
+            // Révoquer tous les tokens de l'utilisateur actuel
             $request->user()->tokens()->delete();
 
+            // Réponse JSON pour indiquer la déconnexion réussie
             return response()->json([
-                'message' => 'Successfully logged out.'
-            ], 200);
+                'message' => 'Logged out successfully.'
+            ]);
         }
 
+        // Si aucun utilisateur n'est authentifié, renvoie une erreur
         return response()->json([
-            'message' => 'No user is authenticated.'
+            'message' => 'No authenticated user found.'
         ], 401);
     }
 }

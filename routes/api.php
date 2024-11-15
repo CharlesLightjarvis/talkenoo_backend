@@ -10,5 +10,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('/users', UserController::class);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/verify-otp', [OtpController::class, 'verifyOtp']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::post('/verify-otp', [OtpController::class, 'verifyOtp']);
