@@ -38,7 +38,7 @@ class AuthController extends Controller
         ]);
 
         // Envoyer l'OTP par e-mail en utilisant le mailable
-        // Mail::to($user->email)->send(new sendOtpMail($otpCode));
+        Mail::to($user->email)->send(new sendOtpMail($otpCode));
 
         // Réponse JSON pour indiquer le succès de l'envoi
         return response()->json([
