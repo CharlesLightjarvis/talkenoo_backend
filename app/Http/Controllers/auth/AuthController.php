@@ -7,12 +7,12 @@ use App\Http\Requests\auth\AuthRequest;
 use App\Mail\sendOtpMail;
 use App\Models\Otp;
 use App\Models\User;
-use App\Notifications\SendOtpNotification;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -45,5 +45,25 @@ class AuthController extends Controller
             'message' => 'OTP sent successfully. Please check your email.',
             'user' => $user
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        // Vérifiez si l'utilisateur est authentifié
+        if (Auth::check()) {
+            // Déconnectez l'utilisateur
+            Auth::logout();
+
+            // Révoquez les tokens de l'utilisateur si vous utilisez une API avec des jetons (optionnel)
+            $request->user()->tokens()->delete();
+
+            return response()->json([
+                'message' => 'Successfully logged out.'
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'No user is authenticated.'
+        ], 401);
     }
 }
